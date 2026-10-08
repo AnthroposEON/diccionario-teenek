@@ -1,6 +1,5 @@
 import pandas as pd
 import re
-import ipywidgets as widgets
 from IPython.display import display, clear_output
 
 # ID de tu Google Sheet detectado en tu Google Drive
