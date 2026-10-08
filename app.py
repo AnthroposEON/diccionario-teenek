@@ -21,15 +21,31 @@ except Exception as e:
 def normalizar_texto(texto):
     if pd.isna(texto):
         return ""
+    
+    # 1. Pasar a minúsculas y quitar espacios
     texto = str(texto).strip().lower()
-    # Eliminar acentos en español para búsquedas más flexibles
-    texto = re.sub(r"[áàäâ]", "a", texto)
-    texto = re.sub(r"[éèëê]", "e", texto)
-    texto = re.sub(r"[íìïî]", "i", texto)
-    texto = re.sub(r"[óòöô]", "o", texto)
-    texto = re.sub(r"[úùüû]", "u", texto)
-    # Cambia saltillos curvos o acentos graves por apóstrofe recto estándar
+    
+    # 2. Unificar caracteres especiales y diacríticos (¡Con tu corrección lógica!)
+    texto = re.sub(r"[éèëêē]", "e", texto)
+    texto = re.sub(r"[áàäâā]", "a", texto)
+    texto = re.sub(r"[íìïîī]", "i", texto)
+    texto = re.sub(r"[óòöôō]", "o", texto)
+    texto = re.sub(r"[úùüûū]", "u", texto)
+    
+    # 3. Unificar las vocales dobles de tu norma a vocales simples para la búsqueda
+    texto = re.sub(r"aa", "a", texto)
+    texto = re.sub(r"ee", "e", texto)
+    texto = re.sub(r"ii", "i", texto)
+    texto = re.sub(r"oo", "o", texto)
+    texto = re.sub(r"uu", "u", texto)
+    
+    # 4. Solucionar el dilema Larsen / Dedazos (c, q -> k)
+    texto = re.sub(r"c", "k", texto)
+    texto = re.sub(r"q", "k", texto)
+    
+    # 5. Estandarizar saltillos
     texto = re.sub(r"[’‘`´]", "'", texto)
+    
     return texto
 
 def buscar_en_diccionario(palabra_usuario):
