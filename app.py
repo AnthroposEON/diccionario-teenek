@@ -1,10 +1,8 @@
 import pandas as pd
 import re
+import streamlit as st
 
-# ID de tu Google Sheet detectado en tu Google Drive
-file_id = '1fm8nsliBRwTKnCQyiHxmFTMVUV2rX01RjgGCA1r-KPI'
-enlace_sheets_csv = f"https://docs.google.com/spreadsheets/d/{file_id}/export?format=csv"
-
+enlace_sheets_csv = st.secrets["MI_ENLACE_SECRETO"]
 df = None
 
 try:
@@ -125,7 +123,6 @@ def buscar_en_diccionario(palabra_usuario):
 # ==========================================
 # INTERFAZ WEB CON STREAMLIT
 # ==========================================
-import streamlit as st
 
 st.set_page_config(page_title="Diccionario Teenek", page_icon="📖", layout="centered")
 
