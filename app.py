@@ -1,6 +1,5 @@
 import pandas as pd
 import re
-from IPython.display import display, clear_output
 
 # ID de tu Google Sheet detectado en tu Google Drive
 file_id = '1fm8nsliBRwTKnCQyiHxmFTMVUV2rX01RjgGCA1r-KPI'
