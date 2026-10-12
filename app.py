@@ -121,7 +121,7 @@ def buscar_en_diccionario(palabra_usuario):
             raiz_info = f" [Raíz: {fila['Raiz']}]" if pd.notna(fila['Raiz']) else ""
             traduccion = fila[col_esp] if pd.notna(fila[col_esp]) else "Sin traducción"
             locacion = fila.get('Origen', 'General')
-            reporte.append(f"* **{fila['Palabra_Teenek']}** ({fila.get('Clase_Gramatical', 'Desconocida')}){raiz_info} [📍 {locacion}] ➔ {traduccion}")
+            reporte.append(f"* **{fila['Palabra_Teenek']}** ({fila.get('Clase_Gramatical', 'Desconocida')}){raiz_info} 📍 {locacion} ➔ {traduccion}")
         return "\n".join(reporte)
 
     # ==========================================
@@ -135,7 +135,7 @@ def buscar_en_diccionario(palabra_usuario):
         for idx, fila in coincidencias_espanol.iterrows():
             raiz_info = f" (Raíz CVC: {fila['Raiz']})" if pd.notna(fila['Raiz']) else " (Raíz pura)"
             locacion = fila.get('Origen', 'General')
-            reporte.append(f"* **{fila['Palabra_Teenek']}** ({fila.get('Clase_Gramatical', 'Desconocida')}){raiz_info} [📍 {locacion}] ➔ {traduccion}")
+            reporte.append(f"* **{fila['Palabra_Teenek']}** ({fila.get('Clase_Gramatical', 'Desconocida')}){raiz_info} 📍 {locacion} ➔ {traduccion}")
         return "\n".join(reporte)
 
     return f"❌ El término, raíz o traducción '{palabra_usuario}' no generó ninguna coincidencia en el corpus."
