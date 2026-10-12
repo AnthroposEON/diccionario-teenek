@@ -60,7 +60,6 @@ def buscar_en_diccionario(palabra_usuario):
     # 1. Normalizar la entrada del usuario
     palabra_limpia = normalizar_texto(palabra_usuario)
 
-    # Preparar columnas normalizadas en segundo plano (No alteran tu Excel original)
     df['Palabra_Teenek_Lower'] = df['Palabra_Teenek'].apply(normalizar_texto)
     df['Español_Lower'] = df[col_esp].apply(normalizar_texto)
     df['Raiz_Lower'] = df['Raiz'].apply(normalizar_texto) if 'Raiz' in df.columns else ""
@@ -91,6 +90,7 @@ def buscar_en_diccionario(palabra_usuario):
         significado = fila.get(col_esp, 'Sin traducción')
         raiz = fila.get('Raiz', '')
         es_derivado = str(fila.get('Es_Derivado', 'No')).strip().lower()
+        origen = fila.get('Origen', 'No especificado')
 
         if es_derivado in ["sí", "si", "yes", "true", "1"] and pd.notna(raiz):
             raiz_normalizada = normalizar_texto(raiz)
@@ -98,12 +98,13 @@ def buscar_en_diccionario(palabra_usuario):
             sig_raiz = info_raiz.iloc[0].get(col_esp, 'Desconocido') if not info_raiz.empty else "No registrada como palabra exenta"
             
             return (f"📖 Coincidencia exacta Teenek: '{fila['Palabra_Teenek']}'\n"
+                    f"📍 **Lugar de Origen:** *{origen}*\n\n"
                     f"👉 Es una forma derivada ({clase}).\n"
                     f"🔗 Raíz morfológica (CVC): '{raiz}' (Significado raíz: {sig_raiz}).\n"
                     f"📝 Significado de esta forma: {significado}.")
         else:
-            return f"📖 Coincidencia exacta Teenek: '{fila['Palabra_Teenek']}' es una raíz pura o forma base ({clase}): {significado}."
-
+            return f"### 📖 Coincidencia exacta Teenek: **{fila['Palabra_Teenek']}**\n\n📍 **Lugar de Origen:** *{origen}*\n\n✨ Es una **raíz pura** o forma base ({clase}):\n\n👉 **Traducción:** {significado}"
+            
     # ==========================================
     # RUTA B: MODO INVESTIGADOR TEENEK (Aproximación)
     # ==========================================
@@ -119,7 +120,8 @@ def buscar_en_diccionario(palabra_usuario):
         for idx, fila in coincidencias_teenek.iterrows():
             raiz_info = f" [Raíz: {fila['Raiz']}]" if pd.notna(fila['Raiz']) else ""
             traduccion = fila[col_esp] if pd.notna(fila[col_esp]) else "Sin traducción"
-            reporte.append(f"  • {fila['Palabra_Teenek']} ({fila.get('Clase_Gramatical', 'Desconocida')}){raiz_info} ➔ {traduccion}")
+            locacion = fila.get('Origen', 'General')
+            reporte.append(f"* **{fila['Palabra_Teenek']}** ({fila.get('Clase_Gramatical', 'Desconocida')}){raiz_info} [📍 {locacion}] ➔ {traduccion}")
         return "\n".join(reporte)
 
     # ==========================================
@@ -132,7 +134,8 @@ def buscar_en_diccionario(palabra_usuario):
         reporte = [f"🇪🇸 Equivalencias encontradas para la búsqueda en español '{palabra_usuario}':"]
         for idx, fila in coincidencias_espanol.iterrows():
             raiz_info = f" (Raíz CVC: {fila['Raiz']})" if pd.notna(fila['Raiz']) else " (Raíz pura)"
-            reporte.append(f"  • {fila['Palabra_Teenek']} [{fila.get('Clase_Gramatical', 'Desconocida')}] {raiz_info} ➔ {fila[col_esp]}")
+            locacion = fila.get('Origen', 'General')
+            reporte.append(f"* **{fila['Palabra_Teenek']}** ({fila.get('Clase_Gramatical', 'Desconocida')}){raiz_info} [📍 {locacion}] ➔ {traduccion}")
         return "\n".join(reporte)
 
     return f"❌ El término, raíz o traducción '{palabra_usuario}' no generó ninguna coincidencia en el corpus."
