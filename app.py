@@ -116,9 +116,9 @@ def buscar_en_diccionario(palabra_usuario):
 
     # Si encontramos resultados por fragmento morfológico Teenek, los priorizamos
     if not coincidencias_teenek.empty and len(termino_busqueda) > 2:
-        reporte = [f"🔍 Hallé {len(coincidencias_teenek)} formas Teenek asociadas a la raíz/patrón '{termino_busqueda}':"]
+        reporte = [f"### 🔍 Formas Teenek asociadas a la raíz/patrón: `{termino_busqueda}`\n", "Se encontraron las siguientes variantes morfológicas en el corpus:\n"]
         for idx, fila in coincidencias_teenek.iterrows():
-            raiz_info = f" [Raíz: {fila['Raiz']}]" if pd.notna(fila['Raiz']) else ""
+            raiz_info = f" *(Raíz: {fila['Raiz']})*" if pd.notna(fila['Raiz']) else " *(Raíz pura)*"
             traduccion = fila[col_esp] if pd.notna(fila[col_esp]) else "Sin traducción"
             locacion = fila.get('Origen', 'General')
             reporte.append(f"* **{fila['Palabra_Teenek']}** ({fila.get('Clase_Gramatical', 'Desconocida')}){raiz_info} — 📍 {locacion} ➔ {traduccion}")
@@ -131,11 +131,12 @@ def buscar_en_diccionario(palabra_usuario):
     coincidencias_espanol = df[df['Español_Lower'].str.contains(palabra_limpia, na=False, regex=False)]
 
     if not coincidencias_espanol.empty:
-        reporte = [f"🇪🇸 Equivalencias encontradas para la búsqueda en español '{palabra_usuario}':"]
+        reporte = [f"### Equivalencias encontradas para la búsqueda en español: *{palabra_usuario}*\n"]
         for idx, fila in coincidencias_espanol.iterrows():
             raiz_info = f" (Raíz CVC: {fila['Raiz']})" if pd.notna(fila['Raiz']) else " (Raíz pura)"
+            traduccion = fila[col_esp] if pd.notna(fila[col_esp]) else "Sin traducción"
             locacion = fila.get('Origen', 'General')
-            reporte.append(f"* **{fila['Palabra_Teenek']}** ({fila.get('Clase_Gramatical', 'Desconocida')}){raiz_info} — 📍 {locacion} ➔ {traduccion}")
+            reporte.append(f"* **{fila['Palabra_Teenek']}** [{fila.get('Clase_Gramatical', 'Desconocida')}] {raiz_info} — 📍 {locacion} ➔ {traduccion}")
         return "\n".join(reporte)
 
     return f"❌ El término, raíz o traducción '{palabra_usuario}' no generó ninguna coincidencia en el corpus."
